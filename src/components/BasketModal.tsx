@@ -1,8 +1,29 @@
 "use client";
 
 import { useEffect } from "react";
-import { useBasketTokens } from "@/lib/useBasketTokens";
-import { NEXAI_CHAIN } from "@/lib/contracts";
+
+const PLANNED_TOKENS = [
+  { ticker: "NEAR", name: "NEAR Protocol" },
+  { ticker: "TAO", name: "Bittensor" },
+  { ticker: "WLD", name: "Worldcoin" },
+  { ticker: "ICP", name: "Internet Computer" },
+  { ticker: "RENDER", name: "Render Network" },
+  { ticker: "VVV", name: "Venice Token" },
+  { ticker: "FET", name: "ASI Alliance" },
+  { ticker: "VIRTUAL", name: "Virtuals Protocol" },
+  { ticker: "GRASS", name: "Grass" },
+  { ticker: "GRT", name: "The Graph" },
+  { ticker: "AKT", name: "Akash Network" },
+  { ticker: "EIGEN", name: "EigenCloud" },
+  { ticker: "THETA", name: "Theta Network" },
+  { ticker: "AR", name: "Arweave" },
+  { ticker: "IP", name: "Story Protocol" },
+  { ticker: "SENT", name: "Sentient" },
+  { ticker: "ALLO", name: "Allora" },
+  { ticker: "IO", name: "io.net" },
+  { ticker: "0G", name: "0G Labs" },
+  { ticker: "NIL", name: "Nillion" },
+];
 
 export function BasketModal({
   open,
@@ -11,8 +32,6 @@ export function BasketModal({
   open: boolean;
   onClose: () => void;
 }) {
-  const { tokens, isLoading } = useBasketTokens();
-
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -30,12 +49,14 @@ export function BasketModal({
       <div
         role="dialog"
         aria-modal="true"
-        aria-label="Current basket composition"
+        aria-label="Planned basket composition"
         onClick={(e) => e.stopPropagation()}
         className="w-full max-w-md rounded-2xl border border-white/10 bg-bg-raised p-6"
       >
         <div className="flex items-start justify-between">
-          <h3 className="font-display text-lg text-ink">Current Basket</h3>
+          <h3 className="font-display text-lg text-ink">
+            Planned Composition
+          </h3>
           <button
             onClick={onClose}
             aria-label="Close"
@@ -45,39 +66,26 @@ export function BasketModal({
           </button>
         </div>
         <p className="mt-1 text-sm text-ink-dim">
-          Live from NexaiCore on Base Sepolia testnet.
+          The target basket of 20 AI-sector tokens.
         </p>
 
-        <div className="mt-4 flex flex-col gap-2">
-          {isLoading && (
-            <span className="font-mono text-sm text-ink-dim">Loading…</span>
-          )}
-          {!isLoading && tokens.length === 0 && (
-            <span className="font-mono text-sm text-ink-dim">
-              No basket tokens found.
-            </span>
-          )}
-          {tokens.map((t) => (
-            <a
-              key={t.address}
-              href={`${NEXAI_CHAIN.blockExplorers?.default.url}/address/${t.address}`}
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center justify-between rounded-lg border border-white/8 px-3 py-2 hover:border-cyan/40"
+        <div className="mt-4 flex max-h-80 flex-col gap-2 overflow-y-auto pr-1 sm:max-h-96">
+          {PLANNED_TOKENS.map((t) => (
+            <div
+              key={t.ticker}
+              className="flex items-center justify-between rounded-lg border border-white/8 px-3 py-2"
             >
               <span className="font-display text-sm text-ink">
-                {t.symbol}
+                {t.ticker}
               </span>
-              <span className="font-mono text-xs text-ink-dim">
-                {t.address.slice(0, 6)}…{t.address.slice(-4)}
-              </span>
-            </a>
+              <span className="text-xs text-ink-dim">{t.name}</span>
+            </div>
           ))}
         </div>
 
-        <p className="mt-4 text-xs text-ink-dim">
-          Testnet basket is a 2-token WETH/USDC placeholder. The production
-          basket will hold up to 20 AI-sector tokens.
+        <p className="mt-4 text-xs text-ink-dim/70">
+          Contract addresses aren&apos;t confirmed yet — explorer links will
+          be added once they are.
         </p>
       </div>
     </div>

@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { WalletButton } from "./WalletButton";
 
+// No live functionality behind wallet connect yet — flip back on when ready.
+const SHOW_WALLET_BUTTON = false;
+
 const NAV_LINKS = [
   { label: "About", href: "#about" },
   { label: "How It Works", href: "#what-we-do" },
@@ -66,7 +69,7 @@ export function Nav() {
             )}
           </button>
 
-          <WalletButton />
+          {SHOW_WALLET_BUTTON && <WalletButton />}
         </div>
       </div>
 

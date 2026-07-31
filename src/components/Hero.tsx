@@ -4,8 +4,6 @@ import { useState } from "react";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { Orb } from "./Orb";
 import { ParticleNetwork } from "./ParticleNetwork";
-import { PriceChartPlaceholder } from "./PriceChartPlaceholder";
-import { StatRow } from "./StatRow";
 import { GrantsFundBlock } from "./GrantsFundBlock";
 import { BasketModal } from "./BasketModal";
 import { ConnectedBalances } from "./ConnectedBalances";
@@ -59,10 +57,6 @@ export function Hero() {
       </div>
 
       <div className="relative mx-auto mt-16 flex max-w-4xl flex-col items-center gap-10">
-        <PriceChartPlaceholder />
-        <div className="w-full max-w-2xl">
-          <StatRow />
-        </div>
         <div className="w-full max-w-xl">
           <GrantsFundBlock />
         </div>
