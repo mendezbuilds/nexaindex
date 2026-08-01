@@ -1,16 +1,49 @@
 "use client";
 
 import { useState } from "react";
-import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { animate, useReducedMotion } from "framer-motion";
 import { Orb } from "./Orb";
 import { ParticleNetwork } from "./ParticleNetwork";
 import { GrantsFundBlock } from "./GrantsFundBlock";
 import { BasketModal } from "./BasketModal";
 import { ConnectedBalances } from "./ConnectedBalances";
 
+// Matches the site's scroll-margin-top convention for anchored sections
+// (see the `section[id]` rule in globals.css) so the spring-scroll below
+// lands at the same offset a native anchor jump would.
+const NAV_OFFSET = 80;
+
 export function Hero() {
-  const { openConnectModal } = useConnectModal();
   const [basketOpen, setBasketOpen] = useState(false);
+  const reduceMotion = useReducedMotion();
+
+  function scrollToAbout() {
+    const el = document.getElementById("about");
+    if (!el) return;
+    const targetY =
+      el.getBoundingClientRect().top + window.scrollY - NAV_OFFSET;
+
+    if (reduceMotion) {
+      window.scrollTo(0, targetY);
+      return;
+    }
+
+    // Override the global CSS smooth-scroll for the duration so it doesn't
+    // layer its own easing on top of framer-motion's spring updates.
+    const html = document.documentElement;
+    const previousScrollBehavior = html.style.scrollBehavior;
+    html.style.scrollBehavior = "auto";
+
+    animate(window.scrollY, targetY, {
+      type: "spring",
+      stiffness: 55,
+      damping: 18,
+      onUpdate: (v) => window.scrollTo(0, v),
+      onComplete: () => {
+        html.style.scrollBehavior = previousScrollBehavior;
+      },
+    });
+  }
 
   return (
     <section className="relative overflow-hidden px-6 pb-24 pt-20 sm:pt-28">
@@ -38,10 +71,10 @@ export function Hero() {
 
         <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
           <button
-            onClick={openConnectModal}
+            onClick={scrollToAbout}
             className="rounded-full bg-gradient-to-r from-cyan to-purple px-7 py-3 font-display text-sm font-medium text-bg transition-transform hover:scale-[1.03] active:scale-[0.98]"
           >
-            Join Now
+            Read More
           </button>
           <button
             onClick={() => setBasketOpen(true)}
